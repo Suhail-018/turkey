@@ -1,26 +1,191 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  /* ————— Miras brand palette ————— */
+  --color-brand: #0b6e4f;
+  --color-brand-deep: #095c42;
+  --color-forest: #134e4a;
+  --color-night: #0b1f1b;
+  --color-ivory: #faf7f2;
+  --color-sand: #e7e2da;
+  --color-gold: #c8a24d;
+  --color-gold-soft: #e8dcbc;
+  --color-ink: #1f2937;
+  --color-olive: #7a8f6a;
+
+  /* ————— Typography ————— */
+  --font-sans: var(--font-manrope), var(--font-plex-arabic), ui-sans-serif,
+    system-ui, sans-serif;
+  --font-display: var(--font-playfair), var(--font-naskh), ui-serif, Georgia,
+    serif;
+  --font-arabic: var(--font-plex-arabic), ui-sans-serif, system-ui, sans-serif;
+
+  /* ————— Depth: layered, soft, warm ————— */
+  --shadow-soft: 0 1px 2px rgb(31 41 55 / 0.04), 0 8px 24px rgb(31 41 55 / 0.06);
+  --shadow-card: 0 1px 3px rgb(31 41 55 / 0.05),
+    0 12px 32px -8px rgb(31 41 55 / 0.12);
+  --shadow-lift: 0 2px 6px rgb(31 41 55 / 0.06),
+    0 24px 48px -12px rgb(31 41 55 / 0.18);
+  --shadow-glow: 0 0 0 1px rgb(200 162 77 / 0.25),
+    0 16px 40px -8px rgb(11 110 79 / 0.25);
+
+  /* ————— Motion ————— */
+  --ease-soft: cubic-bezier(0.2, 0.8, 0.2, 1);
+
+  /* ————— Radii ————— */
+  --radius-card: 1.25rem;
+  --radius-image: 1.5rem;
+  --radius-dialog: 1.75rem;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+/* Base ------------------------------------------------------------------ */
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-ivory);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: rgb(200 162 77 / 0.3);
+}
+
+/* Arabic display type: Naskh carries the editorial voice in RTL */
+[dir="rtl"] .font-display {
+  font-family: var(--font-naskh), var(--font-plex-arabic), serif;
+  letter-spacing: 0;
+}
+
+/* Arabic script is connected — tracking must never pull letters apart. */
+[dir="rtl"] [class*="tracking-"] {
+  letter-spacing: 0 !important;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-brand);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Components ------------------------------------------------------------- */
+
+@layer components {
+  .eyebrow {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-gold);
+  }
+
+  [dir="rtl"] .eyebrow {
+    letter-spacing: 0.08em;
+  }
+
+  /* Ottoman arch mask for select imagery */
+  .arch {
+    border-radius: 999px 999px var(--radius-image) var(--radius-image);
+  }
+
+  /* Subtle 8-point star tessellation — daylight sections */
+  .pattern-star {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='112' height='112' viewBox='0 0 112 112'%3E%3Cg fill='none' stroke='%230B6E4F' stroke-width='0.75'%3E%3Crect x='34' y='34' width='44' height='44'/%3E%3Crect x='34' y='34' width='44' height='44' transform='rotate(45 56 56)'/%3E%3Ccircle cx='56' cy='56' r='7'/%3E%3C/g%3E%3C/svg%3E");
+  }
+
+  /* Same tessellation for night sections */
+  .pattern-star-light {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='112' height='112' viewBox='0 0 112 112'%3E%3Cg fill='none' stroke='%23C8A24D' stroke-width='0.75'%3E%3Crect x='34' y='34' width='44' height='44'/%3E%3Crect x='34' y='34' width='44' height='44' transform='rotate(45 56 56)'/%3E%3Ccircle cx='56' cy='56' r='7'/%3E%3C/g%3E%3C/svg%3E");
+  }
+
+  /* Editorial long-form text */
+  .prose-editorial {
+    font-size: 1.125rem;
+    line-height: 1.9;
+    color: rgb(31 41 55 / 0.85);
+  }
+
+  .prose-editorial p + p {
+    margin-top: 1.5em;
+  }
+
+  .prose-editorial > p:first-of-type::first-letter {
+    font-family: var(--font-display);
+    font-size: 3.6em;
+    line-height: 0.85;
+    float: inline-start;
+    padding-inline-end: 0.12em;
+    padding-top: 0.08em;
+    color: var(--color-brand);
+  }
+
+  /* Hairline gold rule with center star, used as a section ornament */
+  .ornament-rule {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .ornament-rule::before,
+  .ornament-rule::after {
+    content: "";
+    height: 1px;
+    flex: 1;
+    background: linear-gradient(
+      to var(--rule-dir, right),
+      transparent,
+      rgb(200 162 77 / 0.6)
+    );
+  }
+  .ornament-rule::after {
+    background: linear-gradient(
+      to var(--rule-dir-end, left),
+      transparent,
+      rgb(200 162 77 / 0.6)
+    );
+  }
+}
+
+@layer utilities {
+  .scrollbar-none {
+    scrollbar-width: none;
+  }
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* Scrollbar — quiet, warm */
+@media (pointer: fine) {
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--color-ivory);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-sand);
+    border-radius: 8px;
+    border: 2px solid var(--color-ivory);
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-olive);
+  }
 }
